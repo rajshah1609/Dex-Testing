@@ -50,6 +50,7 @@ async function main() {
   // .001 => 1 000 000 000 000 000
   // const amountIn = ethers.utils.parseUnits(inputAmount.toString(), decimals0);
   const amountIn = parseFloat(inputAmount * 10 ** decimals0).toString();
+  const amountOutMinimum = ethers.utils.parseUnits("0.01", decimals1); // Set a reasonable minimum amount for the output token
 
   const approvalAmount = (amountIn * 10).toString();
   const tokenContract0 = new ethers.Contract(address0, ERC20ABI, provider);
@@ -64,7 +65,7 @@ async function main() {
     recipient: WALLET_ADDRESS,
     deadline: Math.floor(Date.now() / 1000) + 60 * 10,
     amountIn: amountIn,
-    amountOutMinimum: 0,
+    amountOutMinimum,
     sqrtPriceLimitX96: 0,
   };
 
@@ -73,7 +74,7 @@ async function main() {
   const transaction = swapRouterContract
     .connect(connectedWallet)
     .exactInputSingle(params, {
-      gasLimit: ethers.utils.hexlify(1000000),
+      gasLimit: ethers.utils.hexlify(10000000),
     })
     .then((transaction) => {
       console.log(transaction);
