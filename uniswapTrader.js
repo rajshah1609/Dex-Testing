@@ -58,6 +58,12 @@ async function main() {
     .connect(connectedWallet)
     .approve(swapRouterAddress, approvalAmount);
 
+  await new Promise((resolve) => setTimeout(resolve, 4000));
+
+  console.log(
+    await tokenContract0.allowance(WALLET_ADDRESS, swapRouterContract.address)
+  );
+
   const params = {
     tokenIn: immutables.token1,
     tokenOut: immutables.token0,
